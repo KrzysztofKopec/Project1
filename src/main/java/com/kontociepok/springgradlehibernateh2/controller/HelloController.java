@@ -16,6 +16,7 @@ public class HelloController {
     @Autowired
     public HelloController(UserRepository userRepository) {
         this.userRepository = userRepository;
+
     }
 
     @GetMapping("/hello")
@@ -35,7 +36,7 @@ public class HelloController {
     }
 
     @GetMapping("/users/{userId}")
-    public User getEmployee(@PathVariable long userId) {
+    public User getUser(@PathVariable long userId) {
         User user = userRepository.findById(userId);
         return user;
     }
