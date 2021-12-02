@@ -12,14 +12,15 @@ import java.util.TreeMap;
 public class UserRepositoryImpl implements UserRepository{
 
     public Map<Long,User> database = new TreeMap<>();
-    public static long count = 1;
+    //public static long count = 1;
 
 
     @Override
-    public void save(User user) {
-        user.setId(count);
-        database.put(count, user);
-        count++;
+    public User save(User user) {
+        //user.setId(count);
+        return database.put(user.getId(), user);
+        //count++;
+        //return user;
     }
 
     @Override
@@ -35,6 +36,11 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public void deleteById(Long id) {
         database.remove(id);
+    }
+
+    @Override
+    public void clear() {
+        database.clear();
     }
 
 }

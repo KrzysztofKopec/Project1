@@ -1,6 +1,8 @@
 package com.kontociepok.springgradlehibernateh2.model;
 
 
+import java.util.Objects;
+
 public class User {
 
     public enum TypeUser {STUDENT, TEACHER;}
@@ -18,6 +20,11 @@ public class User {
     private String pesel;
 
     private User.TypeUser typeUser;
+
+    public User(Long id, String firstName) {
+        this.id = id;
+        this.firstName = firstName;
+    }
 
     public User(Long id, String login, String password, String firstName, String lastName, String pesel, TypeUser typeUser) {
         this.id = id;
@@ -96,5 +103,18 @@ public class User {
                 ", pesel=" + pesel +
                 ", typeUser=" + typeUser +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName);
     }
 }
