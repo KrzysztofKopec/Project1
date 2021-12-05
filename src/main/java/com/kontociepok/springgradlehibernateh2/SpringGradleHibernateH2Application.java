@@ -21,11 +21,11 @@ public class SpringGradleHibernateH2Application implements CommandLineRunner {
 	}
 	@Override
 	public void run(String... args) throws Exception {
-		User d = new User(1L, "banan");
-		User d1 = new User(2L, "orange");
+		User user1 = new User(1L, "banan");
+		User user2 = new User(2L, "orange");
 
-		userRepository.save(d);
-		userRepository.save(d1);
+		userRepository.save(user1);
+		userRepository.save(user2);
 
 	}
 

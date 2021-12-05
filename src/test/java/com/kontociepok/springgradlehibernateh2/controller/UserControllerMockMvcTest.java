@@ -4,13 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kontociepok.springgradlehibernateh2.model.User;
 import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -18,11 +15,9 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -40,7 +35,7 @@ public class UserControllerMockMvcTest {
     private UserRepository userRepository;
 
     @Test
-    void shouldReturnListSizeAndNameUsers() throws Exception{
+    void shouldReturnUsersWhenExist() throws Exception{
         //given
         User user = new User(1L,"Krzysztof");
         User user1 = new User(2L,"Bartek");
@@ -57,12 +52,10 @@ public class UserControllerMockMvcTest {
                 .andExpect(jsonPath("$[1].firstName").value("Bartek"));
     }
     @Test
-    void shouldReturnUserById() throws Exception{
+    void shouldReturnUserByIdWhenExist() throws Exception{
         //given
         User user = new User(1L,"Krzysztof");
-        //userRepository.save(user);
         given(userRepository.findById(1L)).willReturn(user);
-        //when(userRepository.findById(anyLong())).thenReturn(user);
 
         //when
         ResultActions result = mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON));
@@ -75,16 +68,27 @@ public class UserControllerMockMvcTest {
     @Test
     void shouldReturnSaveUser() throws Exception{
         User user = new User(1L,"Tomasz");
-        //given(userRepository.save(any(User.class)).willReturn(user);
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         ResultActions result = mockMvc.perform(post("/addUser")
                         .content(new ObjectMapper().writeValueAsString(new User(1L,"Tomasz")))
                 .contentType(MediaType.APPLICATION_JSON));
 
-        result.andExpect(status().isOk()).andExpect(jsonPath("$.id").exists());
-                //.andExpect(jsonPath("$.id").value("1L"))
-                //.andExpect(jsonPath("$.firstName").value("Tomasz"));
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.firstName").value("Tomasz"));
+    }
+    @Test
+    void shouldDelete() throws Exception{
+
+        given(userRepository.deleteById(1L)).willReturn("Delete User Id: 1");
+
+        ResultActions result = mockMvc.perform(delete("/users/1")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("Delete User Id: 1"));
+
     }
 
 }

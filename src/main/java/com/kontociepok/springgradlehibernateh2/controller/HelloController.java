@@ -43,6 +43,6 @@ public class HelloController {
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable long userId){
         userRepository.deleteById(userId);
-        return "Delete User no Id: "+ userId;
+        return "Delete User Id: "+ userId;
     }
 }

@@ -1,8 +1,6 @@
 package com.kontociepok.springgradlehibernateh2.repository;
 
 import com.kontociepok.springgradlehibernateh2.model.User;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +38,7 @@ class UserRepositoryTest {
         assertThat(result.getFirstName()).isEqualTo("orange");
     }
     @Test
-    void shouldReturnAllListSize(){
+    void shouldReturnAllUsers(){
         //given
         userRepository.save(new User(1L,"banan"));
         userRepository.save(new User(2L,"orange"));
@@ -54,8 +52,9 @@ class UserRepositoryTest {
         //given
         userRepository.save(new User(1L,"banan"));
         userRepository.save(new User(2L,"orange"));
-        userRepository.deleteById(1L);
+
         //when
+        userRepository.deleteById(1L);
         var all = userRepository.findAll();
         //then
         assertThat(all.size()).isEqualTo(1);
