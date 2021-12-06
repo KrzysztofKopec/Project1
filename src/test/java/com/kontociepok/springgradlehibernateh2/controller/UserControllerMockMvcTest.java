@@ -83,11 +83,11 @@ public class UserControllerMockMvcTest {
 
         given(userRepository.deleteById(1L)).willReturn("Delete User Id: 1");
 
-        ResultActions result = mockMvc.perform(delete("/users/1")
-                .contentType(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(delete("/users/1"));
 
-        result.andExpect(status().isOk())
-                .andExpect(jsonPath("$").value("Delete User Id: 1"));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Delete User Id: 1")));
 
     }
 

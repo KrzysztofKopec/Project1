@@ -21,8 +21,8 @@ public class SpringGradleHibernateH2Application implements CommandLineRunner {
 	}
 	@Override
 	public void run(String... args) throws Exception {
-		User user1 = new User(1L, "banan");
-		User user2 = new User(2L, "orange");
+		User user1 = new User(1L, "wacek007","abcdef","Bartek","Ozon","1234", User.TypeUser.TEACHER);
+		User user2 = new User(2L, "bond007","dcba","Wojtek","Wielki","4321", User.TypeUser.STUDENT);
 
 		userRepository.save(user1);
 		userRepository.save(user2);
