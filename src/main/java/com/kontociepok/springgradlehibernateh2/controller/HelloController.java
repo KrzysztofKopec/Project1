@@ -31,8 +31,8 @@ public class HelloController {
 
     @PostMapping("/addUser")
     public User addUser(@RequestBody User user) {
-        userRepository.save(user);
-        return user;
+        return userRepository.save(user);
+        //return user;
     }
 
     @GetMapping("/users/{userId}")
@@ -42,7 +42,6 @@ public class HelloController {
     }
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable long userId){
-        userRepository.deleteById(userId);
-        return "Delete User no Id: "+ userId;
+        return userRepository.deleteById(userId);
     }
 }

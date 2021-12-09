@@ -1,4 +1,4 @@
-package com.kontociepok.springgradlehibernateh2;
+package com.kontociepok.springgradlehibernateh2.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,9 @@ public class TestMockMvc {
 
     @Test
     public void shouldReturnDefaultMessage() throws Exception {
-        this.mockMvc.perform(get("/hello")).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(get("/hello"))
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Hello World")));
     }
 }

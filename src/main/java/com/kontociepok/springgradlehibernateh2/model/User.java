@@ -21,6 +21,10 @@ public class User {
 
     private User.TypeUser typeUser;
 
+    public User(){
+
+    }
+
     public User(Long id, String firstName) {
         this.id = id;
         this.firstName = firstName;

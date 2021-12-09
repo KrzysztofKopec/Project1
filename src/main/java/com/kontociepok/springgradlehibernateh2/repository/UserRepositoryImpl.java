@@ -18,9 +18,9 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public User save(User user) {
         //user.setId(count);
-        return database.put(user.getId(), user);
+        database.put(user.getId(), user);
         //count++;
-        //return user;
+        return user;
     }
 
     @Override
@@ -34,8 +34,9 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public void deleteById(Long id) {
+    public String deleteById(Long id) {
         database.remove(id);
+        return "Delete User Id: "+id;
     }
 
     @Override

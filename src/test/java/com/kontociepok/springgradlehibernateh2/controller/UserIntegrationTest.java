@@ -74,9 +74,9 @@ public class UserIntegrationTest {
 
         // when
         restTemplate.delete("http://localhost:" + port + "/users/1", User.class);
-        var result = restTemplate.getForEntity("http://localhost:" + port + "/users", User[].class);
 
         // then
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/users", User[].class);
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(result.hasBody()).isTrue();
         assertThat(result.getBody()).hasSize(1);

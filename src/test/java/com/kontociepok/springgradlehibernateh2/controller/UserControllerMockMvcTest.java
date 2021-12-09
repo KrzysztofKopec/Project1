@@ -21,8 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -75,16 +74,29 @@ public class UserControllerMockMvcTest {
     @Test
     void shouldReturnSaveUser() throws Exception{
         User user = new User(1L,"Tomasz");
-        //given(userRepository.save(any(User.class)).willReturn(user);
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        //given(userRepository.save(any(Us).willReturn(user);
+        when(userRepository.save(new User(1L,"Tomasz"))).thenReturn(user);
 
         ResultActions result = mockMvc.perform(post("/addUser")
-                        .content(new ObjectMapper().writeValueAsString(new User(1L,"Tomasz")))
-                .contentType(MediaType.APPLICATION_JSON));
+                    .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(new User(1L,"Tomasz"))));
 
-        result.andExpect(status().isOk()).andExpect(jsonPath("$.id").exists());
-                //.andExpect(jsonPath("$.id").value("1L"))
-                //.andExpect(jsonPath("$.firstName").value("Tomasz"));
+        result.andExpect(status().isOk()).andDo(print())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.firstName").value("Tomasz"));
+    }
+    @Test
+    void shouldDelete() throws Exception{
+
+        given(userRepository.deleteById(1L)).willReturn("Delete User Id: 1");
+
+        ResultActions result = mockMvc.perform(delete("/users/1"));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Delete User Id: 1")));
+
     }
 
 }

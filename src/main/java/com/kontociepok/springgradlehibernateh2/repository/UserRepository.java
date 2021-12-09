@@ -10,6 +10,6 @@ public interface UserRepository {
     public User save(User user);
     public User findById(Long id);
     public List<User> findAll();
-    public void deleteById(Long id);
+    public String deleteById(Long id);
     public void clear();
 }
