@@ -1,7 +1,6 @@
 package com.kontociepok.springgradlehibernateh2.controller;
 
 import com.kontociepok.springgradlehibernateh2.model.User;
-import com.kontociepok.springgradlehibernateh2.model.UserDTO;
 import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,22 +26,22 @@ public class HelloController {
     }
 
     @GetMapping("/users")
-    public List<UserDTO> findAll(){
-        return userRepository.findAll().stream().map(this::convertToUserDTO).collect(Collectors.toList());
+    public List<UserResponse> findAll(){
+        return userRepository.findAll().stream().map(this::convertToUserResponse).collect(Collectors.toList());
     }
 
 
     @PostMapping("/addUser")
-    public UserDTO addUser(@RequestBody UserDTO userDTO) {
-        User user = new User(userDTO.getId(), userDTO.getFirstName());
+    public UserCreateRequest addUser(@RequestBody UserCreateRequest userCreateRequest) {
+        User user = new User(userCreateRequest.getFirstName(), userCreateRequest.getLastName());
         userRepository.save(user);
-        return userDTO;
+        return userCreateRequest;
     }
 
 
     @GetMapping("/users/{userId}")
-    public UserDTO getUser(@PathVariable long userId){
-        return convertToUserDTO(userRepository.findById(userId));
+    public UserResponse getUser(@PathVariable long userId){
+        return convertToUserResponse(userRepository.findById(userId));
     }
 
     @DeleteMapping("/users/{userId}")
@@ -51,10 +50,8 @@ public class HelloController {
         return "Delete User Id: "+ userId;
     }
 
-    private UserDTO convertToUserDTO(User user){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setFirstName(user.getFirstName());
-        return userDTO;
+    private UserResponse convertToUserResponse(User user){
+        UserResponse userResponse = new UserResponse(user.getId(),user.getFirstName(),user.getLastName());
+        return userResponse;
     }
 }

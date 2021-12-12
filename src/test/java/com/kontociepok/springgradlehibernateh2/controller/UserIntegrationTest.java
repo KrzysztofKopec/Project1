@@ -27,29 +27,29 @@ public class UserIntegrationTest {
     void shouldReturnAllUsers() throws Exception {
         // given
         userRepository.clear();
-        userRepository.save(new User(1L, "Bartek"));
+        userRepository.save(new User("Alek", "Bartek"));
 
         // when
-        var result = restTemplate.getForEntity("http://localhost:" + port + "/users", User[].class);
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/users", UserResponse[].class);
 
         // then
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(result.hasBody()).isTrue();
-        assertThat(result.getBody()).containsExactly(new User(1L, "Bartek"));
+        assertThat(result.getBody()).containsExactly(new UserResponse(1L,"Alek", "Bartek"));
     }
     @Test
     void shouldReturnUserById() throws Exception {
         // given
         userRepository.clear();
-        userRepository.save(new User(1L, "banan"));
+        userRepository.save(new User("Alek", "banan"));
 
         // when
-        var result = restTemplate.getForEntity("http://localhost:" + port + "/users/1", User.class);
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/users/1", UserResponse.class);
 
         // then
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(result.hasBody()).isTrue();
-        assertThat(result.getBody()).isEqualTo(new User(1L, "banan"));
+        assertThat(result.getBody()).isEqualTo(new UserResponse(1L,"Alek", "banan"));
     }
     @Test
     void shouldSaveUser() throws Exception {
@@ -58,19 +58,19 @@ public class UserIntegrationTest {
 
         // when
         var result = restTemplate.postForEntity("http://localhost:" + port + "/addUser",
-                new User(2L,"Bartek"),User.class);
+                new UserCreateRequest("Alek","Bartek"),UserCreateRequest.class);
 
         // then
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(result.hasBody()).isTrue();
-        assertThat(result.getBody()).isEqualTo(new User(2L, "Bartek"));
+        assertThat(result.getBody()).isEqualTo(new UserCreateRequest("Alek", "Bartek"));
     }
     @Test
     void shouldDeleteUserById() throws Exception {
         // given
         userRepository.clear();
-        userRepository.save(new User(1L, "Krzysztof"));
-        userRepository.save(new User(2L, "Bartek"));
+        userRepository.save(new User("Alek", "Krzysztof"));
+        userRepository.save(new User("Tomek", "Bartek"));
 
         // when
         restTemplate.delete("http://localhost:" + port + "/users/1", User.class);

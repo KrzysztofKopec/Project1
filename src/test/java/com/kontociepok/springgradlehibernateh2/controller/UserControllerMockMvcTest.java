@@ -36,8 +36,8 @@ public class UserControllerMockMvcTest {
     @Test
     void shouldReturnListSizeAndNameUsers() throws Exception{
         //given
-        User user = new User(1L,"Krzysztof");
-        User user1 = new User(2L,"Bartek");
+        User user = new User("Tomek","Krzysztof");
+        User user1 = new User("Daniel","Bartek");
         List<User> users = List.of(user,user1);
         given(userRepository.findAll()).willReturn(users);
 
@@ -47,13 +47,13 @@ public class UserControllerMockMvcTest {
         //then
         result.andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].firstName").value("Krzysztof"))
-                .andExpect(jsonPath("$[1].firstName").value("Bartek"));
+                .andExpect(jsonPath("$[0].firstName").value("Tomek"))
+                .andExpect(jsonPath("$[1].firstName").value("Daniel"));
     }
     @Test
     void shouldReturnUserById() throws Exception{
         //given
-        User user = new User(1L,"Krzysztof");
+        User user = new User("Tomek","Krzysztof");
 
         given(userRepository.findById(1L)).willReturn(user);
 
@@ -63,22 +63,22 @@ public class UserControllerMockMvcTest {
         //then
         result.andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.firstName").value("Krzysztof"));
+                .andExpect(jsonPath("$.firstName").value("Tomek"));
     }
     @Test
     void shouldReturnSaveUser() throws Exception{
-        User user = new User(1L,"Tomasz");
+        User user = new User("Daniel","Tomasz");
 
-        when(userRepository.save(new User(1L,"Tomasz"))).thenReturn(user);
+        when(userRepository.save(new User("Daniel","Tomasz"))).thenReturn(user);
 
         ResultActions result = mockMvc.perform(post("/addUser")
                     .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(new User(1L,"Tomasz"))));
+                        .content(new ObjectMapper().writeValueAsString(new User("Daniel","Tomasz"))));
 
         result.andExpect(status().isOk()).andDo(print())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.firstName").value("Tomasz"));
+                .andExpect(jsonPath("$.firstName").value("DAniel"));
     }
     @Test
     void shouldDelete() throws Exception{
