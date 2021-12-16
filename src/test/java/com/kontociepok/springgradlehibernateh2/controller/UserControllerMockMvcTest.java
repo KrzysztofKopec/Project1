@@ -34,7 +34,7 @@ public class UserControllerMockMvcTest {
     private UserRepository userRepository;
 
     @Test
-    void shouldReturnListSizeAndNameUsers() throws Exception{
+    void shouldReturnUsersWhenExist() throws Exception{
         //given
         User user = new User("Tomek","Krzysztof");
         User user1 = new User("Daniel","Bartek");
@@ -51,14 +51,14 @@ public class UserControllerMockMvcTest {
                 .andExpect(jsonPath("$[1].firstName").value("Daniel"));
     }
     @Test
-    void shouldReturnUserById() throws Exception{
+    void shouldReturnUserByIdWhenExist() throws Exception{
         //given
         User user = new User("Tomek","Krzysztof");
-
+        user.setId(1L);
         given(userRepository.findById(1L)).willReturn(user);
 
         //when
-        ResultActions result = mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(get("/user/1").contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andDo(print()).andExpect(status().isOk())
@@ -67,26 +67,31 @@ public class UserControllerMockMvcTest {
     }
     @Test
     void shouldReturnSaveUser() throws Exception{
+        //given
         User user = new User("Daniel","Tomasz");
-
         when(userRepository.save(new User("Daniel","Tomasz"))).thenReturn(user);
 
-        ResultActions result = mockMvc.perform(post("/addUser")
+        //when
+        ResultActions result = mockMvc.perform(post("/users")
                     .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new User("Daniel","Tomasz"))));
 
+        //then
         result.andExpect(status().isOk()).andDo(print())
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.firstName").value("DAniel"));
+                .andExpect(jsonPath("$.firstName").value("Daniel"))
+                .andExpect(jsonPath("$.lastName").value("Tomasz"));
+
     }
     @Test
-    void shouldDelete() throws Exception{
+    void shouldDeleteUserWhenExist() throws Exception{
 
+        //given
         given(userRepository.deleteById(1L)).willReturn("Delete User Id: 1");
 
+        //when
         ResultActions result = mockMvc.perform(delete("/users/1"));
 
+        //then
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Delete User Id: 1")));

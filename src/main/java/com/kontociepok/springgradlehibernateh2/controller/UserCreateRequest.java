@@ -1,10 +1,13 @@
 package com.kontociepok.springgradlehibernateh2.controller;
 
 import java.util.Objects;
+import javax.validation.constraints.NotEmpty;
 
 public class UserCreateRequest {
 
+    @NotEmpty(message = "please enter firstName")
     private final String firstName;
+    @NotEmpty(message = "please enter lastName")
     private final String lastName;
 
     public UserCreateRequest(String firstName, String lastName) {

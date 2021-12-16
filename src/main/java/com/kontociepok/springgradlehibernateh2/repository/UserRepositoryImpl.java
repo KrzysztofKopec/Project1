@@ -42,6 +42,7 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public void clear() {
         database.clear();
+        count = 1;
     }
 
 }

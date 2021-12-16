@@ -5,6 +5,7 @@ import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,15 +32,15 @@ public class HelloController {
     }
 
 
-    @PostMapping("/addUser")
-    public UserCreateRequest addUser(@RequestBody UserCreateRequest userCreateRequest) {
+    @PostMapping("/users")
+    public UserCreateRequest addUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         User user = new User(userCreateRequest.getFirstName(), userCreateRequest.getLastName());
         userRepository.save(user);
         return userCreateRequest;
     }
 
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/user/{userId}")
     public UserResponse getUser(@PathVariable long userId){
         return convertToUserResponse(userRepository.findById(userId));
     }

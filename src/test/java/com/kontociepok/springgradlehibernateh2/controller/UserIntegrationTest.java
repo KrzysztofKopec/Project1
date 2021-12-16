@@ -24,7 +24,7 @@ public class UserIntegrationTest {
     @Autowired
     private UserRepository userRepository;
     @Test
-    void shouldReturnAllUsers() throws Exception {
+    void shouldReturnAllUsersWhenExist() {
         // given
         userRepository.clear();
         userRepository.save(new User("Alek", "Bartek"));
@@ -38,13 +38,13 @@ public class UserIntegrationTest {
         assertThat(result.getBody()).containsExactly(new UserResponse(1L,"Alek", "Bartek"));
     }
     @Test
-    void shouldReturnUserById() throws Exception {
+    void shouldReturnUserByIdWhenExist() {
         // given
         userRepository.clear();
         userRepository.save(new User("Alek", "banan"));
 
         // when
-        var result = restTemplate.getForEntity("http://localhost:" + port + "/users/1", UserResponse.class);
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/user/1", UserResponse.class);
 
         // then
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
@@ -52,12 +52,12 @@ public class UserIntegrationTest {
         assertThat(result.getBody()).isEqualTo(new UserResponse(1L,"Alek", "banan"));
     }
     @Test
-    void shouldSaveUser() throws Exception {
+    void shouldSaveUser() {
         // given
         userRepository.clear();
 
         // when
-        var result = restTemplate.postForEntity("http://localhost:" + port + "/addUser",
+        var result = restTemplate.postForEntity("http://localhost:" + port + "/users",
                 new UserCreateRequest("Alek","Bartek"),UserCreateRequest.class);
 
         // then
@@ -66,7 +66,7 @@ public class UserIntegrationTest {
         assertThat(result.getBody()).isEqualTo(new UserCreateRequest("Alek", "Bartek"));
     }
     @Test
-    void shouldDeleteUserById() throws Exception {
+    void shouldDeleteUserByIdWhenExist() {
         // given
         userRepository.clear();
         userRepository.save(new User("Alek", "Krzysztof"));

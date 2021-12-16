@@ -1,6 +1,5 @@
 package com.kontociepok.springgradlehibernateh2.model;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
 public class User {
@@ -13,10 +12,8 @@ public class User {
 
     private String password;
 
-    @NotEmpty
     private String firstName;
 
-    @NotEmpty
     private String lastName;
 
     private String pesel;
