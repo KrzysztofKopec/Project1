@@ -37,8 +37,8 @@ public class UserControllerMockMvcTest {
     @Test
     void shouldReturnUsersWhenExist() throws Exception{
         //given
-        User user = new User(1L,"Krzysztof");
-        User user1 = new User(2L,"Bartek");
+        User user = new User("Tomek","Krzysztof");
+        User user1 = new User("Daniel","Bartek");
         List<User> users = List.of(user,user1);
         given(userRepository.findAll()).willReturn(users);
 
@@ -48,35 +48,40 @@ public class UserControllerMockMvcTest {
         //then
         result.andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].firstName").value("Krzysztof"))
-                .andExpect(jsonPath("$[1].firstName").value("Bartek"));
+                .andExpect(jsonPath("$[0].firstName").value("Tomek"))
+                .andExpect(jsonPath("$[1].firstName").value("Daniel"));
     }
     @Test
     void shouldReturnUserByIdWhenExist() throws Exception{
         //given
-        User user = new User(1L,"Krzysztof");
+        User user = new User("Tomek","Krzysztof");
+        user.setId(1L);
         given(userRepository.findById(1L)).willReturn(user);
 
         //when
-        ResultActions result = mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(get("/user/1").contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.firstName").value("Krzysztof"));
+                .andExpect(jsonPath("$.firstName").value("Tomek"));
     }
     @Test
     void shouldReturnSaveUser() throws Exception{
-        User user = new User(1L,"Tomasz");
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        //given
+        User user = new User("Daniel","Tomasz");
+        when(userRepository.save(new User("Daniel","Tomasz"))).thenReturn(user);
 
-        ResultActions result = mockMvc.perform(post("/addUser")
-                        .content(new ObjectMapper().writeValueAsString(new User(1L,"Tomasz")))
-                .contentType(MediaType.APPLICATION_JSON));
+        //when
+        ResultActions result = mockMvc.perform(post("/users")
+                    .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(new User("Daniel","Tomasz"))));
 
-        result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.firstName").value("Tomasz"));
+        //then
+        result.andExpect(status().isOk()).andDo(print())
+                .andExpect(jsonPath("$.firstName").value("Daniel"))
+                .andExpect(jsonPath("$.lastName").value("Tomasz"));
+
     }
     @Test
     void shouldDelete() throws Exception{

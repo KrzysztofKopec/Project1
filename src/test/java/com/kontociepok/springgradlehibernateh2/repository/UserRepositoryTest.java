@@ -18,7 +18,7 @@ class UserRepositoryTest {
     void shouldSaveNewUserAndReturnListSize(){
         //given
         userRepository.clear();
-        userRepository.save(new User(1L,"Krzysztof"));
+        userRepository.save(new User("Bal","Krzysztof"));
 
         //when
         var result = userRepository.findAll();
@@ -29,19 +29,19 @@ class UserRepositoryTest {
     @Test
     void shouldReturnUserById(){
         //given
-        userRepository.save(new User(1L,"banan"));
-        userRepository.save(new User(2L,"orange"));
+        userRepository.save(new User("Tolek","banan"));
+        userRepository.save(new User("Mietek","orange"));
 
         //when
         var result = userRepository.findById(2L);
         //then
-        assertThat(result.getFirstName()).isEqualTo("orange");
+        assertThat(result.getFirstName()).isEqualTo("Mietek");
     }
     @Test
-    void shouldReturnAllUsers(){
+    void shouldReturnAllListSize(){
         //given
-        userRepository.save(new User(1L,"banan"));
-        userRepository.save(new User(2L,"orange"));
+        userRepository.save(new User("Tolek","banan"));
+        userRepository.save(new User("Mietek","orange"));
         //when
         var result = userRepository.findAll();
         //then
@@ -50,11 +50,10 @@ class UserRepositoryTest {
     @Test
     void shouldDeleteUserByIdAndReturnListSize(){
         //given
-        userRepository.save(new User(1L,"banan"));
-        userRepository.save(new User(2L,"orange"));
-
-        //when
+        userRepository.save(new User("Tolek","banan"));
+        userRepository.save(new User("Mietek","orange"));
         userRepository.deleteById(1L);
+        //when
         var all = userRepository.findAll();
         //then
         assertThat(all.size()).isEqualTo(1);

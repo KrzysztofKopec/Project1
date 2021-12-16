@@ -1,6 +1,5 @@
 package com.kontociepok.springgradlehibernateh2.model;
 
-
 import java.util.Objects;
 
 public class User {
@@ -24,9 +23,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String firstName) {
-        this.id = id;
+    public User(String firstName, String lastName) {
         this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public User(Long id, String login, String password, String firstName, String lastName, String pesel, TypeUser typeUser) {
@@ -37,6 +36,31 @@ public class User {
         this.lastName = lastName;
         this.pesel = pesel;
         this.typeUser = typeUser;
+    }
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", pesel=" + pesel +
+                ", typeUser=" + typeUser +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName);
     }
 
     public Long getId() {
@@ -95,29 +119,5 @@ public class User {
         this.typeUser = typeUser;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", pesel=" + pesel +
-                ", typeUser=" + typeUser +
-                '}';
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName);
-    }
 }
