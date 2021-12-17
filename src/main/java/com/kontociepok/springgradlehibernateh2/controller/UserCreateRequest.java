@@ -5,9 +5,9 @@ import javax.validation.constraints.NotEmpty;
 
 public class UserCreateRequest {
 
-    @NotEmpty(message = "please enter firstName")
+    @NotEmpty(message = "please enter first name")
     private final String firstName;
-    @NotEmpty(message = "please enter lastName")
+    @NotEmpty(message = "please enter last name")
     private final String lastName;
 
     public UserCreateRequest(String firstName, String lastName) {

@@ -82,5 +82,17 @@ public class UserIntegrationTest {
         assertThat(result.getBody()).hasSize(1);
 
     }
+    @Test
+    void shouldReturnErrorIsEmptyFirstNameUser() {
+        // given
+        UserCreateRequest user = new UserCreateRequest("","Bartek");
+
+        // when
+        var result = restTemplate.postForEntity("http://localhost:" + port + "/users",
+                user, UserCreateRequest.class);
+
+        // then
+        assertThat(result.getStatusCode().is4xxClientError());
+    }
 
 }
