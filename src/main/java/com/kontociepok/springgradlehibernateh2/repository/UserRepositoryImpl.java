@@ -2,7 +2,6 @@ package com.kontociepok.springgradlehibernateh2.repository;
 
 import com.kontociepok.springgradlehibernateh2.model.User;
 import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

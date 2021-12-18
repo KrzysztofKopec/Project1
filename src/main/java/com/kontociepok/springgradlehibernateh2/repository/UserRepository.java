@@ -1,7 +1,6 @@
 package com.kontociepok.springgradlehibernateh2.repository;
 
 import com.kontociepok.springgradlehibernateh2.model.User;
-
 import java.util.List;
 
 public interface UserRepository {
