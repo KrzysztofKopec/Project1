@@ -24,8 +24,8 @@ public class SpringGradleHibernateH2Application implements CommandLineRunner {
 		User user = new User("Tomek", "banan");
 		User user1 = new User("Mietek", "orange");
 
-//		userRepository.save(user);
-//		userRepository.save(user1);
+		userRepository.save(user);
+		userRepository.save(user1);
 
 	}
 

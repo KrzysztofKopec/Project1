@@ -33,10 +33,9 @@ public class HelloController {
 
 
     @PostMapping("/users")
-    public UserCreateRequest addUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
+    public UserResponse addUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         User user = new User(userCreateRequest.getFirstName(), userCreateRequest.getLastName());
-        userRepository.save(user);
-        return userCreateRequest;
+        return convertToUserResponse(userRepository.save(user));
     }
 
 

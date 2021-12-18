@@ -92,7 +92,7 @@ public class UserIntegrationTest {
                 user, UserCreateRequest.class);
 
         // then
-        assertThat(result.getStatusCode().is4xxClientError());
+        assertThat(result.getStatusCodeValue() == 400);
     }
 
 }
