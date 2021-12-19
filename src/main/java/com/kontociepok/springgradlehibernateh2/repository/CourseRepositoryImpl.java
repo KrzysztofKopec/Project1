@@ -1,6 +1,6 @@
 package com.kontociepok.springgradlehibernateh2.repository;
 
-import com.kontociepok.springgradlehibernateh2.model.User;
+import com.kontociepok.springgradlehibernateh2.model.Course;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,34 +8,33 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository{
+public class CourseRepositoryImpl implements CourseRepository{
 
-    public Map<Long,User> database = new TreeMap<>();
+    public Map<Long, Course> database = new TreeMap<>();
     public static long count = 1;
 
-
     @Override
-    public User save(User user) {
-        user.setId(count);
-        database.put(user.getId(), user);
+    public Course save(Course course) {
+        course.setId(count);
+        database.put(course.getId(), course);
         count++;
-        return user;
+        return course;
     }
 
     @Override
-    public User findById(Long id) {
+    public Course findById(Long id) {
         return database.get(id);
     }
 
     @Override
-    public List<User> findAll() {
+    public List<Course> findAll() {
         return new ArrayList<>(database.values());
     }
 
     @Override
     public String deleteById(Long id) {
         database.remove(id);
-        return "Delete User Id: "+id;
+        return "Delete Course Id: "+id;
     }
 
     @Override
@@ -43,5 +42,4 @@ public class UserRepositoryImpl implements UserRepository{
         database.clear();
         count = 1;
     }
-
 }
