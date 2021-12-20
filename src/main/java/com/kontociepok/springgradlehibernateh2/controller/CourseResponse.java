@@ -1,15 +1,18 @@
 package com.kontociepok.springgradlehibernateh2.controller;
 
+import java.util.List;
 import java.util.Objects;
 
 public class CourseResponse {
 
     private final Long id;
     private final String name;
+    private List<String> users;
 
-    public CourseResponse(Long id, String name) {
+    public CourseResponse(Long id, String name, List<String> users) {
         this.id = id;
         this.name = name;
+        this.users = users;
     }
 
     @Override
@@ -30,6 +33,7 @@ public class CourseResponse {
         return "CourseResponse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", users=" + users +
                 '}';
     }
 
@@ -39,5 +43,9 @@ public class CourseResponse {
 
     public String getName() {
         return name;
+    }
+
+    public List<String> getUsers() {
+        return users;
     }
 }

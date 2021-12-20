@@ -1,7 +1,6 @@
 package com.kontociepok.springgradlehibernateh2.model;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Course {
 
@@ -11,7 +10,7 @@ public class Course {
 
     private String description;
 
-    private List<User> students;
+    private List<User> students = new ArrayList<>();
 
     public Course() {
     }
@@ -21,11 +20,10 @@ public class Course {
         this.description = description;
     }
 
-    public Course(Long id, String name, String description, List<User> students) {
+    public Course(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.students = students;
     }
 
     @Override
@@ -79,7 +77,7 @@ public class Course {
         return students;
     }
 
-    public void setStudents(List<User> students) {
-        this.students = students;
+    public void setStudents(User user) {
+        if(!students.contains(user)) students.add(user);
     }
 }

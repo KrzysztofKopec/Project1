@@ -1,5 +1,6 @@
 package com.kontociepok.springgradlehibernateh2.controller;
 
+import java.util.List;
 import java.util.Objects;
 
 public class UserResponse {
@@ -7,11 +8,13 @@ public class UserResponse {
     private final Long id;
     private final String firstName;
     private final String lastName;
+    private List<String> courses;
 
-    public UserResponse(Long id, String firstName, String lastName) {
+    public UserResponse(Long id, String firstName, String lastName, List<String> courses) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.courses = courses;
     }
 
     @Override
@@ -33,6 +36,7 @@ public class UserResponse {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", courses=" + courses +
                 '}';
     }
 
@@ -46,5 +50,9 @@ public class UserResponse {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public List<String> getCourses() {
+        return courses;
     }
 }

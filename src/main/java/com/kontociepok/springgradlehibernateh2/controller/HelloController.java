@@ -4,6 +4,8 @@ import com.kontociepok.springgradlehibernateh2.model.Course;
 import com.kontociepok.springgradlehibernateh2.model.User;
 import com.kontociepok.springgradlehibernateh2.repository.CourseRepository;
 import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
+import com.kontociepok.springgradlehibernateh2.service.CourseService;
+import com.kontociepok.springgradlehibernateh2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +18,16 @@ public class HelloController {
 
     private UserRepository userRepository;
     private CourseRepository courseRepository;
+    private UserService userService;
+    private CourseService courseService;
 
     @Autowired
-    public HelloController(UserRepository userRepository, CourseRepository courseRepository) {
+    public HelloController(UserRepository userRepository, CourseRepository courseRepository,
+                           UserService userService, CourseService courseService) {
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
+        this.userService = userService;
+        this.courseService = courseService;
     }
 
     @GetMapping("/hello")
@@ -29,12 +36,12 @@ public class HelloController {
     }
 
     @GetMapping("/users")
-    public List<UserResponse> findAllUsers(){
+    public List<UserResponse> findAllUsers() {
         return userRepository.findAll().stream().map(this::convertToUserResponse).collect(Collectors.toList());
     }
 
     @GetMapping("/courses")
-    public List<CourseResponse> findAllCourses(){
+    public List<CourseResponse> findAllCourses() {
         return courseRepository.findAll().stream().map(this::convertToCourseResponse).collect(Collectors.toList());
     }
 
@@ -51,31 +58,46 @@ public class HelloController {
     }
 
     @GetMapping("/user/{userId}")
-    public UserResponse getUser(@PathVariable long userId){
+    public UserResponse getUser(@PathVariable long userId) {
         return convertToUserResponse(userRepository.findById(userId));
     }
+
     @GetMapping("/course/{courseId}")
-    public CourseResponse getCourse(@PathVariable long courseId){
+    public CourseResponse getCourse(@PathVariable long courseId) {
         return convertToCourseResponse(courseRepository.findById(courseId));
     }
 
-    @DeleteMapping("/users/{userId}")
-    public String deleteUser(@PathVariable long userId){
-        userRepository.deleteById(userId);
-        return "Delete User Id: "+ userId;
+    @GetMapping("/user/{userId}/{courseId}")
+    public UserResponse addCourseToUser(@PathVariable long userId, @PathVariable long courseId) {
+        return convertToUserResponse(userService.addCourseToUser(userId, courseId));
     }
-    @DeleteMapping("/courses/{courseId}")
-    public String deleteCourse(@PathVariable long courseId){
-        courseRepository.deleteById(courseId);
-        return "Delete Course Id: "+ courseId;
+    @GetMapping("/course/{courseId}/{userId}")
+    public CourseResponse addUserToCourse(@PathVariable long courseId, @PathVariable long userId) {
+        return convertToCourseResponse(courseService.addUserToCourse(courseId, userId));
     }
 
-    private UserResponse convertToUserResponse(User user){
-        UserResponse userResponse = new UserResponse(user.getId(),user.getFirstName(),user.getLastName());
+    @DeleteMapping("/users/{userId}")
+    public String deleteUser(@PathVariable long userId) {
+        //courseService.deleteUserFromCourses(userId);
+        userRepository.deleteById(userId);
+        return "Delete User Id: " + userId;
+    }
+
+    @DeleteMapping("/courses/{courseId}")
+    public String deleteCourse(@PathVariable long courseId) {
+        courseRepository.deleteById(courseId);
+        return "Delete Course Id: " + courseId;
+    }
+
+    private UserResponse convertToUserResponse(User user) {
+        UserResponse userResponse = new UserResponse(user.getId(), user.getFirstName(), user.getLastName(),
+                user.getCourses().stream().map(Course::getName).collect(Collectors.toList()));
         return userResponse;
     }
-    private CourseResponse convertToCourseResponse(Course course){
-        CourseResponse courseResponse = new CourseResponse(course.getId(),course.getName());
+
+    private CourseResponse convertToCourseResponse(Course course) {
+        CourseResponse courseResponse = new CourseResponse(course.getId(), course.getName(),
+                course.getStudents().stream().map(User::getFirstName).collect(Collectors.toList()));
         return courseResponse;
     }
 }

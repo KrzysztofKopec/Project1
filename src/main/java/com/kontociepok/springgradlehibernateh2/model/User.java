@@ -1,6 +1,6 @@
 package com.kontociepok.springgradlehibernateh2.model;
 
-import java.util.Objects;
+import java.util.*;
 
 public class User {
 
@@ -20,6 +20,8 @@ public class User {
 
     private User.TypeUser typeUser;
 
+    private List<Course> courses = new ArrayList<>();
+
     public User(){
 
     }
@@ -38,6 +40,7 @@ public class User {
         this.pesel = pesel;
         this.typeUser = typeUser;
     }
+
     @Override
     public String toString() {
         return "User{" +
@@ -46,8 +49,9 @@ public class User {
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", pesel=" + pesel +
+                ", pesel='" + pesel + '\'' +
                 ", typeUser=" + typeUser +
+                ", courses=" + courses +
                 '}';
     }
 
@@ -120,5 +124,11 @@ public class User {
         this.typeUser = typeUser;
     }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
 
+    public void setCourses(Course course) {
+        if(!courses.contains(course)) courses.add(course);
+    }
 }
