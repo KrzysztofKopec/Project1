@@ -67,24 +67,24 @@ public class HelloController {
         return convertToCourseResponse(courseRepository.findById(courseId));
     }
 
-    @GetMapping("/user/{userId}/{courseId}")
+    @PutMapping("/users/{userId}/courses/{courseId}")
     public UserResponse addCourseToUser(@PathVariable long userId, @PathVariable long courseId) {
         return convertToUserResponse(userService.addCourseToUser(userId, courseId));
     }
-    @GetMapping("/course/{courseId}/{userId}")
+    @PutMapping("/courses/{courseId}/users/{userId}")
     public CourseResponse addUserToCourse(@PathVariable long courseId, @PathVariable long userId) {
         return convertToCourseResponse(courseService.addUserToCourse(courseId, userId));
     }
 
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable long userId) {
-        //courseService.deleteUserFromCourses(userId);
-        userRepository.deleteById(userId);
+        userService.deleteUserAndDeleteUserFromCourses(userId);
         return "Delete User Id: " + userId;
     }
 
     @DeleteMapping("/courses/{courseId}")
     public String deleteCourse(@PathVariable long courseId) {
+        courseService.deleteCourseAndDeleteCourseFromUsers(courseId);
         courseRepository.deleteById(courseId);
         return "Delete Course Id: " + courseId;
     }
@@ -97,7 +97,9 @@ public class HelloController {
 
     private CourseResponse convertToCourseResponse(Course course) {
         CourseResponse courseResponse = new CourseResponse(course.getId(), course.getName(),
-                course.getStudents().stream().map(User::getFirstName).collect(Collectors.toList()));
+                course.getDescription(),
+                course.getStudents().stream().map(User -> User.getFirstName()+" "+User.getLastName())
+                .collect(Collectors.toList()));
         return courseResponse;
     }
 }

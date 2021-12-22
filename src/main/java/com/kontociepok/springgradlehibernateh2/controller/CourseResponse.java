@@ -7,11 +7,13 @@ public class CourseResponse {
 
     private final Long id;
     private final String name;
+    private final String description;
     private List<String> users;
 
-    public CourseResponse(Long id, String name, List<String> users) {
+    public CourseResponse(Long id, String name, String description, List<String> users) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.users = users;
     }
 
@@ -33,6 +35,7 @@ public class CourseResponse {
         return "CourseResponse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 ", users=" + users +
                 '}';
     }
@@ -43,6 +46,10 @@ public class CourseResponse {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public List<String> getUsers() {
