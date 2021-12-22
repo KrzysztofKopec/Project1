@@ -96,7 +96,9 @@ public class HelloController {
 
     private CourseResponse convertToCourseResponse(Course course) {
         CourseResponse courseResponse = new CourseResponse(course.getId(), course.getName(),
-                course.getStudents().stream().map(User::getFirstName).collect(Collectors.toList()));
+                course.getDescription(),
+                course.getStudents().stream().map(User -> User.getFirstName()+" "+User.getLastName())
+                .collect(Collectors.toList()));
         return courseResponse;
     }
 }

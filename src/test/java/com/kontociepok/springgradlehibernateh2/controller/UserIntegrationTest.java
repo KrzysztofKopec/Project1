@@ -10,6 +10,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,7 +37,7 @@ public class UserIntegrationTest {
         // then
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(result.hasBody()).isTrue();
-        assertThat(result.getBody()).containsExactly(new UserResponse(1L,"Alek", "Bartek"));
+        assertThat(result.getBody()).containsExactly(new UserResponse(1L,"Alek", "Bartek", List.of()));
     }
     @Test
     void shouldReturnUserByIdWhenExist() {
@@ -49,7 +51,7 @@ public class UserIntegrationTest {
         // then
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(result.hasBody()).isTrue();
-        assertThat(result.getBody()).isEqualTo(new UserResponse(1L,"Alek", "banan"));
+        assertThat(result.getBody()).isEqualTo(new UserResponse(1L,"Alek", "banan",List.of()));
     }
     @Test
     void shouldSaveUser() {
@@ -76,7 +78,7 @@ public class UserIntegrationTest {
         restTemplate.delete("http://localhost:" + port + "/users/1", User.class);
 
         // then
-        var result = restTemplate.getForEntity("http://localhost:" + port + "/users", User[].class);
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/users", UserResponse[].class);
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(result.hasBody()).isTrue();
         assertThat(result.getBody()).hasSize(1);
