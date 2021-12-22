@@ -78,14 +78,13 @@ public class HelloController {
 
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable long userId) {
-        //courseService.deleteUserFromCourses(userId);
-        userRepository.deleteById(userId);
+        userService.deleteUserAndDeleteUserFromCourse(userId);
         return "Delete User Id: " + userId;
     }
 
     @DeleteMapping("/courses/{courseId}")
     public String deleteCourse(@PathVariable long courseId) {
-        courseRepository.deleteById(courseId);
+        courseService.deleteCourseAndDeleteCourseFromUsers(courseId);
         return "Delete Course Id: " + courseId;
     }
 
