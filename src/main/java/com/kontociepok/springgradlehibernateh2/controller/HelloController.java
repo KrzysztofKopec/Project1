@@ -85,20 +85,21 @@ public class HelloController {
     @DeleteMapping("/courses/{courseId}")
     public String deleteCourse(@PathVariable long courseId) {
         courseService.deleteCourseAndDeleteCourseFromUsers(courseId);
-        courseRepository.deleteById(courseId);
         return "Delete Course Id: " + courseId;
     }
 
     private UserResponse convertToUserResponse(User user) {
         UserResponse userResponse = new UserResponse(user.getId(), user.getFirstName(), user.getLastName(),
-                user.getCourses().stream().map(Course::getName).collect(Collectors.toList()));
+                user.getCoursesId().stream().map(e -> courseRepository.findById(e).getName())
+                        .collect(Collectors.toList()));
         return userResponse;
     }
 
     private CourseResponse convertToCourseResponse(Course course) {
         CourseResponse courseResponse = new CourseResponse(course.getId(), course.getName(),
                 course.getDescription(),
-                course.getStudents().stream().map(User -> User.getFirstName()+" "+User.getLastName())
+                course.getStudentsId().stream().map(e -> userRepository.findById(e).getFirstName()
+                        +" "+ userRepository.findById(e).getLastName())
                 .collect(Collectors.toList()));
         return courseResponse;
     }

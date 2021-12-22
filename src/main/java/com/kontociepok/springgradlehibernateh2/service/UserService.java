@@ -7,8 +7,7 @@ import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -23,17 +22,17 @@ public class UserService {
 
     public User addCourseToUser(Long userId, Long courseId){
         User user = userRepository.findById(userId);
-        user.setCourses(courseRepository.findById(courseId));
+        user.setCoursesId(courseId);
         Course course = courseRepository.findById(courseId);
-        course.setStudents(userRepository.findById(userId));
+        course.setStudentsId(userId);
         return user;
     }
 
     public void deleteUserAndDeleteUserFromCourses(long userId) {
         User user = userRepository.findById(userId);
-        List<Long> listCourses = user.getCourses().stream().map(Course::getId).collect(Collectors.toList());
+        Set<Long> listCourses = user.getCoursesId();
         for(Long coursesId: listCourses){
-            courseRepository.findById(coursesId).getStudents().remove(user);
+            courseRepository.findById(coursesId).getStudentsId().remove(userId);
         }
         userRepository.deleteById(userId);
     }
