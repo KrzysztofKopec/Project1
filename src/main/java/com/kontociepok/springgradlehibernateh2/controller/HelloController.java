@@ -67,11 +67,11 @@ public class HelloController {
         return convertToCourseResponse(courseRepository.findById(courseId));
     }
 
-    @GetMapping("/user/{userId}/{courseId}")
+    @PutMapping("/users/{userId}/courses/{courseId}")
     public UserResponse addCourseToUser(@PathVariable long userId, @PathVariable long courseId) {
         return convertToUserResponse(userService.addCourseToUser(userId, courseId));
     }
-    @GetMapping("/course/{courseId}/{userId}")
+    @PutMapping("/courses/{courseId}/users/{userId}")
     public CourseResponse addUserToCourse(@PathVariable long courseId, @PathVariable long userId) {
         return convertToCourseResponse(courseService.addUserToCourse(courseId, userId));
     }
