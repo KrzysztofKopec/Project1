@@ -10,7 +10,7 @@ public class Course {
 
     private String description;
 
-    private List<User> students = new ArrayList<>();
+    private Set<Long> studentsId = new TreeSet<>();
 
     public Course() {
     }
@@ -31,12 +31,12 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(id, course.id) && Objects.equals(name, course.name) && Objects.equals(description, course.description) && Objects.equals(students, course.students);
+        return Objects.equals(id, course.id) && Objects.equals(name, course.name) && Objects.equals(description, course.description) && Objects.equals(studentsId, course.studentsId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, students);
+        return Objects.hash(id, name, description, studentsId);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Course {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", students=" + students +
+                ", students=" + studentsId +
                 '}';
     }
 
@@ -73,11 +73,11 @@ public class Course {
         this.description = description;
     }
 
-    public List<User> getStudents() {
-        return students;
+    public Set<Long> getStudentsId() {
+        return studentsId;
     }
 
-    public void setStudents(User user) {
-        if(!students.contains(user)) students.add(user);
+    public void setStudentsId(Long studentsId) {
+        this.studentsId.add(studentsId);
     }
 }

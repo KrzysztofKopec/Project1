@@ -20,7 +20,7 @@ public class User {
 
     private User.TypeUser typeUser;
 
-    private List<Course> courses = new ArrayList<>();
+    private Set<Long> coursesId = new TreeSet<>();
 
     public User(){
 
@@ -51,7 +51,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", pesel='" + pesel + '\'' +
                 ", typeUser=" + typeUser +
-                ", courses=" + courses +
+                ", courses=" + coursesId +
                 '}';
     }
 
@@ -124,11 +124,11 @@ public class User {
         this.typeUser = typeUser;
     }
 
-    public List<Course> getCourses() {
-        return courses;
+    public Set<Long> getCoursesId() {
+        return coursesId;
     }
 
-    public void setCourses(Course course) {
-        if(!courses.contains(course)) courses.add(course);
+    public void setCoursesId(Long coursesId) {
+        this.coursesId.add(coursesId);
     }
 }
