@@ -7,6 +7,7 @@ import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -21,9 +22,9 @@ public class CourseService {
     }
     public Course addUserToCourse(Long courseId, Long userId) {
         Course course = courseRepository.findById(courseId);
-        course.setStudentsId(userId);
+        course.addStudentId(userId);
         User user = userRepository.findById(userId);
-        user.setCoursesId(courseId);
+        user.addCourseId(courseId);
         return course;
     }
 
@@ -34,5 +35,17 @@ public class CourseService {
             userRepository.findById(userId).getCoursesId().remove(courseId);
         }
         courseRepository.deleteById(courseId);
+    }
+
+    public Course findById(long courseId) {
+        return courseRepository.findById(courseId);
+    }
+
+    public Course save(Course course) {
+        return courseRepository.save(course);
+    }
+
+    public List<Course> findAll() {
+        return courseRepository.findAll();
     }
 }

@@ -2,8 +2,6 @@ package com.kontociepok.springgradlehibernateh2.controller;
 
 import com.kontociepok.springgradlehibernateh2.model.Course;
 import com.kontociepok.springgradlehibernateh2.model.User;
-import com.kontociepok.springgradlehibernateh2.repository.CourseRepository;
-import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 import com.kontociepok.springgradlehibernateh2.service.CourseService;
 import com.kontociepok.springgradlehibernateh2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +14,11 @@ import java.util.stream.Collectors;
 @RestController
 public class HelloController {
 
-    private UserRepository userRepository;
-    private CourseRepository courseRepository;
     private UserService userService;
     private CourseService courseService;
 
     @Autowired
-    public HelloController(UserRepository userRepository, CourseRepository courseRepository,
-                           UserService userService, CourseService courseService) {
-        this.userRepository = userRepository;
-        this.courseRepository = courseRepository;
+    public HelloController(UserService userService, CourseService courseService) {
         this.userService = userService;
         this.courseService = courseService;
     }
@@ -37,45 +30,45 @@ public class HelloController {
 
     @GetMapping("/users")
     public List<UserResponse> findAllUsers() {
-        return userRepository.findAll().stream().map(this::convertToUserResponse).collect(Collectors.toList());
+        return userService.findAll().stream().map(this::convertToUserResponse).collect(Collectors.toList());
     }
     @GetMapping("/user/{userId}/courses")
     public List<String> allCoursesOfUser(@PathVariable long userId){
-        return userRepository.findById(userId).getCoursesId().stream().map(e -> courseRepository.findById(e).getName())
+        return userService.findById(userId).getCoursesId().stream().map(e -> courseService.findById(e).getName())
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/courses")
     public List<CourseResponse> findAllCourses() {
-        return courseRepository.findAll().stream().map(this::convertToCourseResponse).collect(Collectors.toList());
+        return courseService.findAll().stream().map(this::convertToCourseResponse).collect(Collectors.toList());
     }
     @GetMapping("/course/{courseId}/users")
     public List<String> allUsersOfCourse(@PathVariable long courseId){
-        return courseRepository.findById(courseId).getStudentsId().stream().map(e -> userRepository.findById(e).getFirstName()
-                        +" "+ userRepository.findById(e).getLastName())
+        return courseService.findById(courseId).getStudentsId().stream().map(e -> userService.findById(e).getFirstName()
+                        +" "+ userService.findById(e).getLastName())
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/users")
     public UserResponse addUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         User user = new User(userCreateRequest.getFirstName(), userCreateRequest.getLastName());
-        return convertToUserResponse(userRepository.save(user));
+        return convertToUserResponse(userService.save(user));
     }
 
     @PostMapping("/courses")
     public CourseResponse addCourse(@Valid @RequestBody CourseCreateRequest courseCreateRequest) {
         Course course = new Course(courseCreateRequest.getName(), courseCreateRequest.getDescription());
-        return convertToCourseResponse(courseRepository.save(course));
+        return convertToCourseResponse(courseService.save(course));
     }
 
     @GetMapping("/user/{userId}")
     public UserResponse getUser(@PathVariable long userId) {
-        return convertToUserResponse(userRepository.findById(userId));
+        return convertToUserResponse(userService.findById(userId));
     }
 
     @GetMapping("/course/{courseId}")
     public CourseResponse getCourse(@PathVariable long courseId) {
-        return convertToCourseResponse(courseRepository.findById(courseId));
+        return convertToCourseResponse(courseService.findById(courseId));
     }
 
     @PutMapping("/user/{userId}/course/{courseId}")
@@ -101,7 +94,7 @@ public class HelloController {
 
     private UserResponse convertToUserResponse(User user) {
         UserResponse userResponse = new UserResponse(user.getId(), user.getFirstName(), user.getLastName(),
-                user.getCoursesId().stream().map(e -> courseRepository.findById(e).getName())
+                user.getCoursesId().stream().map(e -> courseService.findById(e).getName())
                         .collect(Collectors.toList()));
         return userResponse;
     }
@@ -109,8 +102,8 @@ public class HelloController {
     private CourseResponse convertToCourseResponse(Course course) {
         CourseResponse courseResponse = new CourseResponse(course.getId(), course.getName(),
                 course.getDescription(),
-                course.getStudentsId().stream().map(e -> userRepository.findById(e).getFirstName()
-                        +" "+ userRepository.findById(e).getLastName())
+                course.getStudentsId().stream().map(e -> userService.findById(e).getFirstName()
+                        +" "+ userService.findById(e).getLastName())
                 .collect(Collectors.toList()));
         return courseResponse;
     }

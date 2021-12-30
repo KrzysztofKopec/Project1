@@ -2,7 +2,6 @@ package com.kontociepok.springgradlehibernateh2.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kontociepok.springgradlehibernateh2.model.Course;
-import com.kontociepok.springgradlehibernateh2.model.User;
 import com.kontociepok.springgradlehibernateh2.repository.CourseRepository;
 import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 import com.kontociepok.springgradlehibernateh2.service.CourseService;
@@ -16,9 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
-import java.util.Set;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
@@ -26,10 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @WebMvcTest(HelloController.class)
-public class UserControllerMockMvcTest {
-
+public class CourseControllerMockMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -49,76 +46,69 @@ public class UserControllerMockMvcTest {
     private UserService userService;
 
     @Test
-    void shouldReturnUsersWhenExist() throws Exception{
+    void shouldReturnCourseWhenExist() throws Exception{
         //given
-        User user = new User("Tomek","Krzysztof");
-        User user1 = new User("Daniel","Bartek");
-        List<User> users = List.of(user,user1);
-        given(userRepository.findAll()).willReturn(users);
+        Course course = new Course("Biologia","xxx");
+        Course course1 = new Course("Informatyka","XYZ");
+        List<Course> courses = List.of(course, course1);
+        given(courseRepository.findAll()).willReturn(courses);
 
         //when
-        ResultActions result = mockMvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(get("/courses").contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].firstName").value("Tomek"))
-                .andExpect(jsonPath("$[1].firstName").value("Daniel"));
+                .andExpect(jsonPath("$[0].name").value("Biologia"))
+                .andExpect(jsonPath("$[1].name").value("Informatyka"));
     }
     @Test
-    void shouldReturnUserByIdWhenExist() throws Exception{
+    void shouldReturnCourseByIdWhenExist() throws Exception{
         //given
-        User user = new User("Tomek","Krzysztof");
-        user.setId(1L);
-        given(userRepository.findById(1L)).willReturn(user);
+        Course course = new Course(1L,"Biologia","xxx");
+        given(courseRepository.findById(1L)).willReturn(course);
 
         //when
-        ResultActions result = mockMvc.perform(get("/user/1").contentType(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(get("/course/1").contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.firstName").value("Tomek"));
+                .andExpect(jsonPath("$.name").value("Biologia"));
     }
     @Test
-    void shouldReturnSaveUser() throws Exception{
+    void shouldReturnSaveCourse() throws Exception{
         //given
-        User user = new User("Daniel","Tomasz");
-        when(userRepository.save(new User("Daniel","Tomasz"))).thenReturn(user);
+        Course course = new Course("Biologia","xxx");
+        when(courseRepository.save(new Course("Biologia","xxx"))).thenReturn(course);
 
         //when
-        ResultActions result = mockMvc.perform(post("/users")
-                    .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(new User("Daniel","Tomasz"))));
+        ResultActions result = mockMvc.perform(post("/courses")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(new Course("Biologia","xxx"))));
 
         //then
         result.andExpect(status().isOk()).andDo(print())
-                .andExpect(jsonPath("$.firstName").value("Daniel"))
-                .andExpect(jsonPath("$.lastName").value("Tomasz"));
+                .andExpect(jsonPath("$.name").value("Biologia"))
+                .andExpect(jsonPath("$.description").value("xxx"));
 
     }
+
     @Test
-    void shouldDeleteUserWhenExist() throws Exception{
+    void shouldDeleteCourseWhenExist() throws Exception{
 
         //given
-        User user = new User("Daniel","Tomasz");
-        given(userRepository.deleteById(1L)).willReturn("Delete User Id: 1");
+        Course course = new Course(1L,"Biologia","xxx");
+        given(courseRepository.deleteById(1L)).willReturn("Delete Course Id: 1");
 
         //when
-        ResultActions result = mockMvc.perform(delete("/users/1"));
+        ResultActions result = mockMvc.perform(delete("/courses/1"));
 
         //then
-        assertEquals(0, userRepository.findAll().size());
+        assertEquals(0, courseRepository.findAll().size());
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Delete User Id: 1")));
+                .andExpect(content().string(containsString("Delete Course Id: 1")));
 
     }
-    @Test
-    void shouldReturnUserWithAddCourse() throws Exception{
-        User user = new User("Daniel","Tomasz");
-        
-
-    }
-
 }

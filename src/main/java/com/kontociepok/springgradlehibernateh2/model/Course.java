@@ -77,7 +77,7 @@ public class Course {
         return studentsId;
     }
 
-    public void setStudentsId(Long studentsId) {
-        this.studentsId.add(studentsId);
+    public void addStudentId(Long studentId) {
+        this.studentsId.add(studentId);
     }
 }

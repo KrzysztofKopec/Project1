@@ -128,7 +128,7 @@ public class User {
         return coursesId;
     }
 
-    public void setCoursesId(Long coursesId) {
-        this.coursesId.add(coursesId);
+    public void addCourseId(Long courseId) {
+        this.coursesId.add(courseId);
     }
 }

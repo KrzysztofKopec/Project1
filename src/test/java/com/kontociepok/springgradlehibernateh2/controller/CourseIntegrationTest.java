@@ -1,6 +1,7 @@
 package com.kontociepok.springgradlehibernateh2.controller;
 
 import com.kontociepok.springgradlehibernateh2.model.Course;
+import com.kontociepok.springgradlehibernateh2.model.User;
 import com.kontociepok.springgradlehibernateh2.repository.CourseRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,5 +96,34 @@ public class CourseIntegrationTest {
 
         // then
         assertThat(result.getStatusCodeValue() == 400);
+    }
+    @Test
+    void shouldReturnAllUsersOfCourseWhenExist(){
+        //given
+        Course course = new Course("Fizyka", "Atom");
+        course.addStudentId(1L);
+        course.addStudentId(2L);
+        courseRepository.save(course);
+
+        //when
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/course/3/users", List.class);
+
+        //then
+        assertThat(result.getStatusCodeValue() == 200);
+        assertThat(result.hasBody()).isTrue();
+        assertThat(result.getBody()).isEqualTo(List.of("Tomek banan","Mietek orange"));
+    }
+    @Test
+    void shouldReturnAddedUserToCourseWhenExist(){
+        //given
+        restTemplate.put("http://localhost:" + port + "/course/1/user/1", CourseResponse.class);
+
+        //when
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/course/1", CourseResponse.class);
+
+        //then
+        assertThat(result.getStatusCodeValue() == 200);
+        assertThat(result.hasBody()).isTrue();
+        assertThat(result.getBody()).isEqualTo(new CourseResponse(1L,"Informatyka","klub wew.",List.of("Tomek banan")));
     }
 }

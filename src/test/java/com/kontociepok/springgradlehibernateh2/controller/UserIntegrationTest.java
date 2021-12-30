@@ -1,5 +1,6 @@
 package com.kontociepok.springgradlehibernateh2.controller;
 
+import com.kontociepok.springgradlehibernateh2.model.Course;
 import com.kontociepok.springgradlehibernateh2.model.User;
 import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 
@@ -96,5 +97,33 @@ public class UserIntegrationTest {
         // then
         assertThat(result.getStatusCodeValue() == 400);
     }
+    @Test
+    void shouldReturnAllCoursesOfUserWhenExist(){
+       //given
+        User user = new User("Alek", "Bartek");
+        user.addCourseId(1L);
+        user.addCourseId(2L);
+        userRepository.save(user);
 
+        //when
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/user/3/courses", List.class);
+
+        //then
+        assertThat(result.getStatusCodeValue() == 200);
+        assertThat(result.hasBody()).isTrue();
+        assertThat(result.getBody()).isEqualTo(List.of("Informatyka","Matematyka"));
+    }
+    @Test
+    void shouldReturnAddedCourseToUserWhenExist(){
+        //given
+        restTemplate.put("http://localhost:" + port + "/user/1/course/1", UserResponse.class);
+
+        //when
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/user/1", UserResponse.class);
+
+        //then
+        assertThat(result.getStatusCodeValue() == 200);
+        assertThat(result.hasBody()).isTrue();
+        assertThat(result.getBody()).isEqualTo(new UserResponse(1L,"Tomek", "banan",List.of("informatyka")));
+    }
 }
