@@ -100,13 +100,14 @@ public class CourseIntegrationTest {
     @Test
     void shouldReturnAllUsersOfCourseWhenExist(){
         //given
+        courseRepository.clear();
         Course course = new Course("Fizyka", "Atom");
         course.addStudentId(1L);
         course.addStudentId(2L);
         courseRepository.save(course);
 
         //when
-        var result = restTemplate.getForEntity("http://localhost:" + port + "/course/3/users", List.class);
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/course/1/users", List.class);
 
         //then
         assertThat(result.getStatusCodeValue() == 200);
@@ -125,5 +126,21 @@ public class CourseIntegrationTest {
         assertThat(result.getStatusCodeValue() == 200);
         assertThat(result.hasBody()).isTrue();
         assertThat(result.getBody()).isEqualTo(new CourseResponse(1L,"Informatyka","klub wew.",List.of("Tomek banan")));
+    }
+    @Test
+    void shouldReturnUpdateCourseWhenExist(){
+        //given
+        courseRepository.clear();
+        courseRepository.save(new Course("Fizyka", "Atom"));
+
+        //when
+        restTemplate.put("http://localhost:" + port + "/course/1/update",
+                new CourseCreateRequest("Informatyka","Bajtek"),CourseCreateRequest.class);
+
+        //then
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/course/1", CourseResponse.class);
+        assertThat(result.getStatusCodeValue()==200);
+        assertThat(result.hasBody()).isTrue();
+        assertThat(result.getBody()).isEqualTo(new CourseResponse(1L,"Informatyka","Bajtek", List.of()));
     }
 }

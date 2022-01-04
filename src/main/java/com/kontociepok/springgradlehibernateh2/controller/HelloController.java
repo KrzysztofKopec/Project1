@@ -37,6 +37,10 @@ public class HelloController {
         return userService.findById(userId).getCoursesId().stream().map(e -> courseService.findById(e).getName())
                 .collect(Collectors.toList());
     }
+    @GetMapping("/user/{userId}/courseGrades/{courseId}")
+    public String courseGrades(@PathVariable long userId, @PathVariable long courseId){
+        return userService.courseGrades(userId, courseId);
+    }
 
     @GetMapping("/courses")
     public List<CourseResponse> findAllCourses() {
@@ -75,9 +79,25 @@ public class HelloController {
     public UserResponse addCourseToUser(@PathVariable long userId, @PathVariable long courseId) {
         return convertToUserResponse(userService.addCourseToUser(userId, courseId));
     }
+    @PutMapping("/user/{userId}/update")
+    public UserResponse updateUser(@Valid @RequestBody UserCreateRequest userCreateRequest, @PathVariable long userId) {
+        User user = new User(userCreateRequest.getFirstName(), userCreateRequest.getLastName());
+        return convertToUserResponse(userService.update(user, userId));
+    }
+    @PutMapping("/user/{userId}/addGrade/{courseId}/{grade}")
+    public String addGrade(@PathVariable long userId, @PathVariable long courseId, @PathVariable int grade){
+        userService.addGrade(userId,courseId,grade);
+        return "Grade : "+grade+" courseId: "+courseId+" to userId: "+userId;
+    }
+
     @PutMapping("/course/{courseId}/user/{userId}")
     public CourseResponse addUserToCourse(@PathVariable long courseId, @PathVariable long userId) {
         return convertToCourseResponse(courseService.addUserToCourse(courseId, userId));
+    }
+    @PutMapping("/course/{courseId}/update")
+    public CourseResponse updateCourse(@Valid @RequestBody CourseCreateRequest courseCreateRequest, @PathVariable long courseId) {
+        Course course = new Course(courseCreateRequest.getName(), courseCreateRequest.getDescription());
+        return convertToCourseResponse(courseService.update(course, courseId));
     }
 
     @DeleteMapping("/users/{userId}")

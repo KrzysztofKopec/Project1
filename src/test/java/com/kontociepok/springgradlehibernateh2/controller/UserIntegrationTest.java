@@ -100,13 +100,14 @@ public class UserIntegrationTest {
     @Test
     void shouldReturnAllCoursesOfUserWhenExist(){
        //given
+        userRepository.clear();
         User user = new User("Alek", "Bartek");
         user.addCourseId(1L);
         user.addCourseId(2L);
         userRepository.save(user);
 
         //when
-        var result = restTemplate.getForEntity("http://localhost:" + port + "/user/3/courses", List.class);
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/user/1/courses", List.class);
 
         //then
         assertThat(result.getStatusCodeValue() == 200);
@@ -125,5 +126,21 @@ public class UserIntegrationTest {
         assertThat(result.getStatusCodeValue() == 200);
         assertThat(result.hasBody()).isTrue();
         assertThat(result.getBody()).isEqualTo(new UserResponse(1L,"Tomek", "banan",List.of("informatyka")));
+    }
+    @Test
+    void shouldReturnUpdateUserWhenExist(){
+        //given
+        userRepository.clear();
+        userRepository.save(new User("Mietek", "Kraweznik"));
+
+        //when
+        restTemplate.put("http://localhost:" + port + "/user/1/update",
+                new UserCreateRequest("Alek","Bartek"),UserCreateRequest.class);
+
+        //then
+        var result = restTemplate.getForEntity("http://localhost:" + port + "/user/1", UserResponse.class);
+        assertThat(result.getStatusCodeValue()==200);
+        assertThat(result.hasBody()).isTrue();
+        assertThat(result.getBody()).isEqualTo(new UserResponse(1L,"Alek", "Bartek", List.of()));
     }
 }

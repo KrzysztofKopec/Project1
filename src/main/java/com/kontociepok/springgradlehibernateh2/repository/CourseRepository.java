@@ -9,5 +9,6 @@ public interface CourseRepository {
     public Course findById(Long id);
     public List<Course> findAll();
     public String deleteById(Long id);
+    public void update(Course course);
     public void clear();
 }

@@ -38,6 +38,11 @@ public class CourseRepositoryImpl implements CourseRepository{
     }
 
     @Override
+    public void update(Course course) {
+        database.put(course.getId(), course);
+    }
+
+    @Override
     public void clear() {
         database.clear();
         count = 1;

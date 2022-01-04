@@ -39,6 +39,11 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
+    public void update(User user) {
+        database.put(user.getId(), user);
+    }
+
+    @Override
     public void clear() {
         database.clear();
         count = 1;

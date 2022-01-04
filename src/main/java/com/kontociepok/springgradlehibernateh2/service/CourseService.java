@@ -23,8 +23,10 @@ public class CourseService {
     public Course addUserToCourse(Long courseId, Long userId) {
         Course course = courseRepository.findById(courseId);
         course.addStudentId(userId);
+        courseRepository.update(course);
         User user = userRepository.findById(userId);
         user.addCourseId(courseId);
+        userRepository.update(user);
         return course;
     }
 
@@ -47,5 +49,14 @@ public class CourseService {
 
     public List<Course> findAll() {
         return courseRepository.findAll();
+    }
+
+    public Course update(Course course, long courseId) {
+        Course course1 = courseRepository.findById(courseId);
+        course1.setId(courseId);
+        course1.setName(course.getName());
+        course1.setDescription(course.getDescription());
+        courseRepository.update(course1);
+        return course1;
     }
 }

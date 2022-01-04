@@ -9,5 +9,6 @@ public interface UserRepository {
     public User findById(Long id);
     public List<User> findAll();
     public String deleteById(Long id);
+    public void update(User user);
     public void clear();
 }

@@ -60,5 +60,4 @@ class UserRepositoryTest {
         assertThat(all.size()).isEqualTo(1);
 
     }
-
 }

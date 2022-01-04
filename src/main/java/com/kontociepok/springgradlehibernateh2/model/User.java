@@ -22,6 +22,8 @@ public class User {
 
     private Set<Long> coursesId = new TreeSet<>();
 
+    private Map<Long, ArrayList<Integer>> gradesCourses = new HashMap<>();
+
     public User(){
 
     }
@@ -130,5 +132,22 @@ public class User {
 
     public void addCourseId(Long courseId) {
         this.coursesId.add(courseId);
+    }
+
+    public Map<Long, ArrayList<Integer>> getGradesCourses() {
+        return gradesCourses;
+    }
+
+    public void addingACourseGrade(Long courseId, Integer grade) {
+        ArrayList<Integer> lista;
+        if(gradesCourses.containsKey(courseId)) {
+            lista= gradesCourses.get(courseId);
+            lista.add(grade);
+            gradesCourses.put(courseId, lista);
+        }else{
+            lista = new ArrayList<>();
+            lista.add(grade);
+            gradesCourses.put(courseId, lista);
+        }
     }
 }
