@@ -63,16 +63,32 @@ public class UserService {
     }
 
     public void addGrade(long userId, long courseId, int grade) {
-        User user = userRepository.findById(userId);
-        user.addingACourseGrade(courseId,grade);
-        userRepository.update(user);
+        if (userRepository.findById(userId) != null) {
+            User user = userRepository.findById(userId);
+            if (user.getCoursesId().contains(courseId)) {
+                user.addingACourseGrade(courseId, grade);
+                userRepository.update(user);
+            } else {
+                System.out.println("there is no course on id :" + courseId);
+            }
+        }else {
+            System.out.println("there is no user on id: " + userId);
+        }
     }
 
     public String courseGrades(long userId, long courseId) {
-        User user = userRepository.findById(userId);
-        String nameCourse = courseRepository.findById(courseId).getName();
-        ArrayList<Integer> grades = user.getGradesCourses().get(courseId);
-        String gradesToString = grades.toString();
-        return nameCourse+" "+gradesToString;
+        if(userRepository.findById(userId) != null) {
+            User user = userRepository.findById(userId);
+            if (user.getCoursesId().contains(courseId)) {
+                String nameCourse = courseRepository.findById(courseId).getName();
+                ArrayList<Integer> grades = user.getGradesCourses().get(courseId);
+                String gradesToString = grades.toString();
+                return nameCourse + " " + gradesToString;
+            } else {
+                return "there is no course on id :" + courseId;
+            }
+        }else {
+            return "there is no user on id: " + userId;
+        }
     }
 }
