@@ -1,6 +1,7 @@
 package com.kontociepok.springgradlehibernateh2.controller;
 
 import com.kontociepok.springgradlehibernateh2.model.Course;
+import com.kontociepok.springgradlehibernateh2.model.Grade;
 import com.kontociepok.springgradlehibernateh2.model.User;
 import com.kontociepok.springgradlehibernateh2.service.CourseService;
 import com.kontociepok.springgradlehibernateh2.service.UserService;
@@ -84,10 +85,11 @@ public class HelloController {
         User user = new User(userCreateRequest.getFirstName(), userCreateRequest.getLastName());
         return convertToUserResponse(userService.update(user, userId));
     }
-    @PutMapping("/user/{userId}/addGrade/{courseId}/{grade}")
-    public String addGrade(@PathVariable long userId, @PathVariable long courseId, @PathVariable int grade){
-        userService.addGrade(userId,courseId,grade);
-        return "Grade : "+grade+" courseId: "+courseId+" to userId: "+userId;
+    @PutMapping("/user/{userId}/addGrade")
+    public GradeResponse addGrade(@Valid @RequestBody GradeCreateRequest gradeCreateRequest, @PathVariable long userId) throws Exception {
+        Grade grade = new Grade(gradeCreateRequest.getGrade());
+        userService.addGrade(userId,gradeCreateRequest.getCourseId(),grade);
+        return new GradeResponse(courseService.findById(gradeCreateRequest.getCourseId()).getName(),userService.findById(userId).getGradesCourses().get(gradeCreateRequest.getCourseId()));
     }
 
     @PutMapping("/course/{courseId}/user/{userId}")

@@ -20,9 +20,9 @@ public class User {
 
     private User.TypeUser typeUser;
 
-    private Set<Long> coursesId = new TreeSet<>();
+    private Set<Long> coursesId;
 
-    private Map<Long, ArrayList<Integer>> gradesCourses = new HashMap<>();
+    private Map<Long, List<Grade>> gradesCourses;
 
     public User(){
 
@@ -31,6 +31,8 @@ public class User {
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+        coursesId = new TreeSet<>();
+        gradesCourses = new HashMap<>();
     }
 
     public User(Long id, String login, String password, String firstName, String lastName, String pesel, TypeUser typeUser) {
@@ -134,20 +136,23 @@ public class User {
         this.coursesId.add(courseId);
     }
 
-    public Map<Long, ArrayList<Integer>> getGradesCourses() {
+    public Map<Long, List<Grade>> getGradesCourses() {
         return gradesCourses;
     }
 
-    public void addingACourseGrade(Long courseId, Integer grade) {
-        ArrayList<Integer> lista;
-        if(gradesCourses.containsKey(courseId)) {
-            lista= gradesCourses.get(courseId);
-            lista.add(grade);
-            gradesCourses.put(courseId, lista);
-        }else{
-            lista = new ArrayList<>();
-            lista.add(grade);
-            gradesCourses.put(courseId, lista);
-        }
+    public void addingACourseGrade(Long courseId, Grade grade) {
+
+        gradesCourses.computeIfAbsent(courseId, k -> new ArrayList<>()).add(grade);
+
+//        List<Grade> lista;
+//        if(gradesCourses.containsKey(courseId)) {
+//            lista= gradesCourses.get(courseId);
+//            lista.add(grade);
+//            gradesCourses.put(courseId, lista);
+//        }else{
+//            lista = new ArrayList<>();
+//            lista.add(grade);
+//            gradesCourses.put(courseId, lista);
+//        }
     }
 }
