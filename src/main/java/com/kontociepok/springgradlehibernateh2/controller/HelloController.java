@@ -38,9 +38,9 @@ public class HelloController {
         return userService.findById(userId).getCoursesId().stream().map(e -> courseService.findById(e).getName())
                 .collect(Collectors.toList());
     }
-    @GetMapping("/user/{userId}/courseGrades/{courseId}")
-    public String courseGrades(@PathVariable long userId, @PathVariable long courseId){
-        return userService.courseGrades(userId, courseId);
+    @GetMapping("/user/{userId}/courseGrades")
+    public List<GradeResponse> courseGrades(@PathVariable long userId){
+        return userService.courseGrades(userId);
     }
 
     @GetMapping("/courses")
@@ -85,16 +85,15 @@ public class HelloController {
         User user = new User(userCreateRequest.getFirstName(), userCreateRequest.getLastName());
         return convertToUserResponse(userService.update(user, userId));
     }
-    @PutMapping("/user/{userId}/addGrade")
-    public GradeResponse addGrade(@Valid @RequestBody GradeCreateRequest gradeCreateRequest, @PathVariable long userId) throws Exception {
-        Grade grade = new Grade(gradeCreateRequest.getGrade());
-        userService.addGrade(userId,gradeCreateRequest.getCourseId(),grade);
-        return new GradeResponse(courseService.findById(gradeCreateRequest.getCourseId()).getName(),userService.findById(userId).getGradesCourses().get(gradeCreateRequest.getCourseId()));
-    }
-
     @PutMapping("/course/{courseId}/user/{userId}")
     public CourseResponse addUserToCourse(@PathVariable long courseId, @PathVariable long userId) {
         return convertToCourseResponse(courseService.addUserToCourse(courseId, userId));
+    }
+
+    @PutMapping("/user/{userId}/addGrade")
+    public GradeResponse addGrade(@Valid @RequestBody GradeCreateRequest gradeCreateRequest, @PathVariable long userId) throws Exception {
+        Grade grade = new Grade(gradeCreateRequest.getGrade());
+        return userService.addGrade(userId,gradeCreateRequest.getCourseId(),grade);
     }
     @PutMapping("/course/{courseId}/update")
     public CourseResponse updateCourse(@Valid @RequestBody CourseCreateRequest courseCreateRequest, @PathVariable long courseId) {

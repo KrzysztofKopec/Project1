@@ -6,14 +6,10 @@ import com.kontociepok.springgradlehibernateh2.model.Grade;
 import com.kontociepok.springgradlehibernateh2.model.User;
 import com.kontociepok.springgradlehibernateh2.repository.CourseRepository;
 import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -66,29 +62,25 @@ public class UserService {
         return user1;
     }
 
-    public void addGrade(long userId, long courseId, Grade grade) throws Exception {
-        User user = userRepository.findById(userId);
-        Optional<User> optionalUser = Optional.ofNullable(user);
-        if(optionalUser.map(e -> e.getCoursesId().contains(courseId)).isPresent())
-        {
-                user.addingACourseGrade(courseId, grade);
-                userRepository.update(user);
-            } else throw new Exception("Course not exists !!!!!");
+    public GradeResponse addGrade(long userId, long courseId, Grade grade) {
+        Optional.ofNullable(userRepository.findById(userId))
+                .ifPresent(user -> {
+                    if(user.getCoursesId().contains(courseId)){
+                        user.addingACourseGrade(courseId, grade);
+                        userRepository.update(user);
+                    }
+                });
+        return new GradeResponse(courseRepository.findById(courseId).getName(),userRepository.findById(userId).getGradesCourses().get(courseId));
     }
 
-    public String courseGrades(long userId, long courseId) {
-        User user = userRepository.findById(userId);
-        if(user != null) {
-            if (user.getCoursesId().contains(courseId)) {
-                String nameCourse = courseRepository.findById(courseId).getName();
-                List<Grade> grades = user.getGradesCourses().get(courseId);
-                String gradesToString = grades.toString();
-                return nameCourse + " " + gradesToString;
-            } else {
-                return "there is no course on id :" + courseId;
-            }
-        }else {
-            return "there is no user on id: " + userId;
-        }
+    public List<GradeResponse> courseGrades(long userId) {
+        List<GradeResponse> list = new ArrayList<>();
+        Optional.ofNullable(userRepository.findById(userId))
+                .ifPresent(user -> {
+                    for(Map.Entry<Long, List<Grade>> entry: user.getGradesCourses().entrySet()){
+                        list.add(new GradeResponse(courseRepository.findById(entry.getKey()).getName(),entry.getValue()));
+                    }
+                });
+        return list;
     }
 }

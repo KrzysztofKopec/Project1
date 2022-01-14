@@ -114,11 +114,5 @@ public class UserControllerMockMvcTest {
                 .andExpect(content().string(containsString("Delete User Id: 1")));
 
     }
-    @Test
-    void shouldReturnUserWithAddCourse() throws Exception{
-        User user = new User("Daniel","Tomasz");
-        
-
-    }
 
 }

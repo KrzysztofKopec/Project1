@@ -1,6 +1,7 @@
 package com.kontociepok.springgradlehibernateh2.controller;
 
 import com.kontociepok.springgradlehibernateh2.model.Course;
+import com.kontociepok.springgradlehibernateh2.model.Grade;
 import com.kontociepok.springgradlehibernateh2.model.User;
 import com.kontociepok.springgradlehibernateh2.repository.UserRepository;
 
